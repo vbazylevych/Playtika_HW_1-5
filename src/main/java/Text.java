@@ -1,4 +1,10 @@
-import java.util.*;
+
+import com.google.common.collect.Sets;
+
+
+import java.util.Arrays;
+import java.util.HashSet;
+
 
 
 public class Text {
@@ -9,47 +15,37 @@ public class Text {
         this.text = text;
     }
 
+    private String clearText(String dirtyText) {
+        String clearText = dirtyText.toLowerCase().replaceAll("\\pP", "");
+        return clearText;
+    }
+
+    private String[] getArrayOfUniqueWords(String string) {
+        String[] arrayOfSptiledStrings = string.split(" ");
+
+        HashSet<String> setOfStrings = Sets.newHashSet(arrayOfSptiledStrings);
+        setOfStrings.remove("");
+
+        String[] clearArray = setOfStrings.toArray(new String[setOfStrings.size()]);
+        return clearArray;
+    }
+
     public String[] getTopWords(int n) {
 
-        String[] uniqueWords = TextUtils.getUniqueWords(TextUtils.clearText(text));
+        String[] clearArray = getArrayOfUniqueWords(clearText(text));
+        Arrays.sort(clearArray);
+        String[] strings;
+        if (n <= clearArray.length) {
+            strings = Arrays.copyOfRange(clearArray, 0, n);
 
-        Arrays.sort(uniqueWords);
-
-        String[] strings = {};
-
-        if (uniqueWords.length < n || n == 0 || n < 0) {
-            System.out.println("Incorrect N: array has only " + uniqueWords.length + " elements");
-            return strings;
         } else {
-            strings = Arrays.copyOfRange(uniqueWords, 0, n);
+            strings = Arrays.copyOfRange(clearArray, 0, clearArray.length);
         }
+
+        System.out.println(Arrays.toString(strings));
         return strings;
     }
 
 
-    public Map<String, Integer> getWordFrequencies() {
-        String[] splitedArray = TextUtils.getArrayOfSplitedWords(TextUtils.clearText(text));
 
-        Map<String, Integer> resultMap = new HashMap<String, Integer>();
-
-        for (String word : splitedArray) {
-            if (resultMap.containsKey(word)) {
-                resultMap.put(word, resultMap.get(word) + 1);
-            } else {
-                resultMap.put(word, 1);
-            }
-            resultMap.remove("");
-        }
-        return resultMap;
-    }
-
-    public int getLengthInChars() {
-        String[] splitedArray = TextUtils.getArrayOfSplitedWords(TextUtils.clearText(text));
-        int sum = 0;
-
-        for (String s : splitedArray) {
-            sum = sum + s.length();
-        }
-        return sum;
-    }
 }

@@ -1,77 +1,38 @@
-
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 public class GetTopWordsMethodTest {
 
     @Test
-    public void stringWithSpesialSimbols() {
+    public void metodReturnNTopWordsForStringWithSpesialSimbols() throws Exception {
 
-        Text text = new Text("## ,123 яяя" + "\n" + ",art-, a, @kot! @#");
+        Text text = new Text("## , ,art-, a, @kot! @#");
         String[] result = text.getTopWords(3);
+        String[] expectedResult = {"a", "art", "kot"};
 
-        assertThat(result[0], anyOf(is("a"), is("b")));
-        assertThat(result[1], is("art"));
-        assertThat(result[2], allOf(containsString("ot"), startsWith("k")));
-        assertThat(result, arrayWithSize(3));
+        Assert.assertEquals(result, expectedResult);
     }
 
     @Test
-    public void stringWithApperCasesSimbols() {
+    public void metodReturnNTopWordsForStringWithApperCaseSimbols() throws Exception {
 
-        Text text = new Text(" a ART Kot");
+        Text text = new Text("## , Art, a, Kot! @#");
         String[] result = text.getTopWords(3);
+        String[] expectedResult = {"a", "art", "kot"};
 
-        assertThat(result, arrayContainingInAnyOrder("kot", "a", "art"));
+        Assert.assertEquals(result, expectedResult);
     }
 
     @Test
-    public void stringWitSameWords() {
+    public void metodReturnNTopWordsForStringWitSameWords() throws Exception {
 
-        Text text = new Text("art art kot kot");
-        String[] result = text.getTopWords(2);
-
-        assertThat(result, arrayContaining("art", "kot"));
-    }
-
-    @Test
-    public void zeroN() {
-
-        Text text = new Text("begemot art a");
-        String[] result = text.getTopWords(0);
-
-        assertThat(result, emptyArray());
-    }
-
-    @Test
-    public void outOfBoundsN() {
-
-        Text text = new Text("begemot art a");
-        String[] result = text.getTopWords(-1);
-
-        assertThat(result, emptyArray());
-    }
-
-    @Test
-    public void emptyText() {
-
-        Text text = new Text("");
+        Text text = new Text("## , Art, art, Kot!, begemot, BEgimot @#");
         String[] result = text.getTopWords(3);
+        String[] expectedResult = {"a", "art", "kot"};
 
-        assertThat(result, emptyArray());
+        Assert.assertEquals(result, expectedResult);
     }
-
-    @Test(expected = NullPointerException.class)
-    public void nullText() {
-
-        Text text = new Text(null);
-        String[] result = text.getTopWords(3);
-
-    }
-
 }
 
 
