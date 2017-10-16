@@ -1,51 +1,41 @@
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.google.common.collect.Sets;
-
-
-import java.util.Arrays;
-import java.util.HashSet;
-
+import static java.util.stream.Collectors.*;
 
 
 public class Text {
 
     private final String text;
+    private final List<String> words;
 
     public Text(String text) {
-        this.text = text;
-    }
-
-    private String clearText(String dirtyText) {
-        String clearText = dirtyText.toLowerCase().replaceAll("\\pP", "");
-        return clearText;
-    }
-
-    private String[] getArrayOfUniqueWords(String string) {
-        String[] arrayOfSptiledStrings = string.split(" ");
-
-        HashSet<String> setOfStrings = Sets.newHashSet(arrayOfSptiledStrings);
-        setOfStrings.remove("");
-
-        String[] clearArray = setOfStrings.toArray(new String[setOfStrings.size()]);
-        return clearArray;
-    }
-
-    public String[] getTopWords(int n) {
-
-        String[] clearArray = getArrayOfUniqueWords(clearText(text));
-        Arrays.sort(clearArray);
-        String[] strings;
-        if (n <= clearArray.length) {
-            strings = Arrays.copyOfRange(clearArray, 0, n);
-
+        if (text == null) {
+            throw new IllegalArgumentException("Text should not be null");
         } else {
-            strings = Arrays.copyOfRange(clearArray, 0, clearArray.length);
+            this.text = text;
+            this.words = Stream.of(text.toLowerCase().split("[^A-Za-z]")).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         }
-
-        System.out.println(Arrays.toString(strings));
-        return strings;
     }
 
+    public List<String> getTopWords(int n) {
 
+        return words.stream()
+                .sorted()
+                .distinct()
+                .limit(n)
+                .collect(toList());
+    }
 
+    public Map<String, Long> getWordFrequencies() {
+        return words.stream()
+                .collect(groupingBy(s -> s, counting()));
+    }
+
+    public long getLengthInChars() {
+        return words.stream()
+                .mapToInt(String::length)
+                .sum();
+    }
 }

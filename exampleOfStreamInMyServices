@@ -1,0 +1,61 @@
+ids.stream().map(String::valueOf).collect(Collectors.joining(","))
+
+**********************************************************************
+
+ String headersString = Collections.list((Enumeration<String>) req.getHeaderNames())
+                .stream()
+                .map(name -> name + "=" + req.getHeader(name))
+                .collect(Collectors.joining(", "));
+
+************************************************************************
+
+test = test.values().stream().sorted(reverseOrder(comparingInt(TestInfo::getTest))).collect(toList());
+
+
+********************************************************************************************************************
+
+TestList.stream()
+                .filter(test -> test.getTest().compareTo(test) <= 0)
+                .findFirst();
+
+********************************************************************************************************************
+
+Map<Long, TestConverter> testConverterMap = testTypeIds.stream()
+                .collect(Collectors.toMap(id -> id, any -> testConverter));
+
+
+*******************************************************************************************************************
+
+testFacade.getUserTest(userId, sessionId, testDictionary.getActiveTest())
+                .stream()
+                .filter(testDictionary::testForTestExists)
+                .map(testDictionary::getTestByTestId)
+                .sorted(Comparator.comparing(PrioritizedTest::getPriority).reversed())
+                .map(PrioritizedTest::getTest)
+                .findFirst()
+                .orElseGet(() -> {
+                    logger.error("Bla bla");
+                    return testDictionary.getTestById(DEFAULT_TEST__ID)
+                            .orElseThrow(() -> new MyServiceException(Service.ErrorCode.NOT_FOUND, "Can't find default test"));
+                })
+
+****************************************************************************************************************************
+
+ Set<Integer> test = testList.export().stream().map(elem -> (Integer) elem).collect(Collectors.toSet())
+
+ *******************************************************************************************************************************
+
+  entity.getItems().stream().collect(toMap(e -> e.getType().getId(), ServiceTestItemEntity::getData))
+
+  ***********************************************************************************************************
+  LongStream.range(0, testCount).forEach(i -> testDays.add(Boolean.FALSE));
+
+  *******************************************************************************************************
+
+  TestState.getState().entrySet().stream()
+                      .filter(entry -> (entry.getKey() + skipFirst) < testCount)
+                      .filter(entry -> entry.getValue() > 0)
+                      .map(Map.Entry::getKey)
+                      .forEach(key -> {
+                          test.set(key + skipFirst, Boolean.TRUE);
+                      });
